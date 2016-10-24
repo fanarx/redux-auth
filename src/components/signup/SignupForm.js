@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
-import userApi from '../../api/mockUserApi';
+import React, { Component, PropTypes } from 'react';
+//import { Match, Redirect } from 'react-router';
+import validateUser from '../../common/validations/signup';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class SignupForm extends Component {
 
@@ -7,7 +9,9 @@ class SignupForm extends Component {
         super(props);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            errors: {},
+            isLoading: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -19,46 +23,68 @@ class SignupForm extends Component {
         })
     }
 
+    isValid() {
+        const { errors, isValid } = validateUser(this.state);
+
+        if (!isValid) {
+            this.setState({ errors })
+        }
+
+        return isValid;
+    }
+
     onSubmit(e) {
         e.preventDefault();
-        userApi.logIn(this.state);
+        if (!this.isValid()) {
+            return;
+        }
+
+        this.setState({ errors: {}, isLoading: true });
+        this.props.userLoginRequest(this.state)
+            .then(() => {
+                this.context.router.transitionTo('/');
+            })
+            .catch(data => this.setState({ errors: data, isLoading: false }))
+
     }
 
     render() {
+        const { errors } = this.state;
         return (
             <form onSubmit={this.onSubmit}>
                 <h1>Join our community!</h1>
+                <TextFieldGroup
+                    error={errors.username}
+                    label="Username"
+                    onChange={this.onChange}
+                    value={this.state.username}
+                    field="username"
+                />
+
+                <TextFieldGroup
+                    error={errors.password}
+                    label="Password"
+                    onChange={this.onChange}
+                    value={this.state.password}
+                    field="password"
+                />
 
                 <div className="form-group">
-                    <label className="control-label">Username</label>
-                    <input 
-                        value={this.state.username}
-                        onChange={this.onChange}
-                        type="text"
-                        name="username"
-                        className="form-control"
-                    />
-                </div>
-
-                <div className="form-group">
-                    <label className="control-label">Password</label>
-                    <input 
-                        value={this.state.password}
-                        onChange={this.onChange}
-                        type="password"
-                        name="password"
-                        className="form-control"
-                    />
-                </div>
-
-                <div className="form-group">
-                    <button className="btn btn-primary btn-lg">
+                    <button disabled={this.state.isLoading} className="btn btn-primary btn-lg">
                         Sign up
                     </button>
                 </div>
             </form>
         );
     }
+}
+
+SignupForm.propTypes = {
+    userLoginRequest: PropTypes.func.isRequired
+}
+
+SignupForm.contextTypes = {
+    router: PropTypes.object
 }
 
 export default SignupForm;

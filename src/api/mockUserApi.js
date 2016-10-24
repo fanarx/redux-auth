@@ -1,3 +1,5 @@
+import validateUser from '../common/validations/signup';
+
 const users = [
     {
         id: 'user-1',
@@ -16,14 +18,20 @@ const users = [
     }
 ]
 
+
 class UserApi {
 
     static logIn(user) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
+
+                const { errors, isValid } = validateUser(user);
+                if (!isValid) {
+                    reject(errors);
+                }
                 let existingUser = users.find(u => u.username === user.username && u.password === user.password);
                 if (existingUser) {
-                    resolve('User exists');
+                    resolve({ success: true });
                 } else {
                     reject('User does not exist');
                 }
