@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 //import { Match, Redirect } from 'react-router';
 import validateUser from '../../common/validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
-import { userSigninRequest } from '../../actions/signupActions';
+import { userSigninRequest, isUserExists } from '../../actions/signupActions';
 import { addFlashMessage } from '../../actions/flashMessages';
 import { connect } from 'react-redux';
 
@@ -14,16 +14,38 @@ class SignupForm extends Component {
             username: '',
             password: '',
             errors: {},
-            isLoading: false
+            isLoading: false,
+            invalid: false
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.checkUserExists = this.checkUserExists.bind(this);
     }
 
     onChange(e) {
         this.setState({
             [e.target.name]: e.target.value
         })
+    }
+
+    checkUserExists(e) {
+        const field = e.target.name;
+        const val = e.target.value;
+        if (val !== "") {
+            this.props.isUserExists(val).then(user => {
+                let errors = this.state.errors;
+                let invalid;
+                if (user) {
+                    errors[field] = `There is user with such ${field}`;
+                    invalid = true;
+                } else {
+                    errors[field] = '';
+                    invalid = false;
+                }
+                this.setState({ errors, invalid });
+                console.log('isUserExists', user);
+            });
+        }
     }
 
     isValid() {
@@ -65,6 +87,7 @@ class SignupForm extends Component {
                     error={errors.username}
                     label="Username"
                     onChange={this.onChange}
+                    checkUserExists={this.checkUserExists}
                     value={this.state.username}
                     field="username"
                 />
@@ -78,7 +101,7 @@ class SignupForm extends Component {
                 />
 
                 <div className="form-group">
-                    <button disabled={this.state.isLoading} className="btn btn-primary btn-lg">
+                    <button disabled={this.state.isLoading || this.state.invalid} className="btn btn-primary btn-lg">
                         Sign up
                     </button>
                 </div>
@@ -89,11 +112,12 @@ class SignupForm extends Component {
 
 SignupForm.propTypes = {
     userSigninRequest: PropTypes.func.isRequired,
-    addFlashMessage: PropTypes.func.isRequired
+    addFlashMessage: PropTypes.func.isRequired,
+    isUserExists: PropTypes.func.isRequired
 }
 
 SignupForm.contextTypes = {
     router: PropTypes.object
 }
 
-export default connect(null, { userSigninRequest, addFlashMessage })(SignupForm);
+export default connect(null, { userSigninRequest, addFlashMessage, isUserExists })(SignupForm);

@@ -15,7 +15,23 @@ const users = [
         username: 'user3',
         password: 'user3'
     }
-]
+];
+
+function validateServerSide(user, otherValidations) {
+    let { errors } = otherValidations(user);
+
+    let existingUsername = users.find(u => u.username === user.username);
+    let existingPassword = users.find(u => u.password === user.password);
+    if (existingUsername) { errors.username = 'There is user with such username'}
+    if (existingPassword) { errors.password = 'There is user with such password'}
+
+    return {
+        errors,
+        isValid: Object.keys(errors).length === 0
+    }
+    
+
+}
 
 
 class UserApi {
@@ -32,12 +48,13 @@ class UserApi {
         return new Promise((resolve, reject) => {
         setTimeout(() => {
 
-            const { errors, isValid } = validateUser(user);
+            const { errors, isValid } = validateServerSide(user, validateUser);
             if (!isValid) {
                 reject(errors);
             }
             //let existingUser = users.find(u => u.username === user.username && u.password === user.password);
-            users.push(user);
+            users.push({ success: true });
+            
             resolve(user);
         }, delay);
         });
@@ -57,6 +74,26 @@ class UserApi {
                 } else {
                     reject('User does not exist');
                 }
+            }, delay);
+        })
+    }
+
+    static isUserExists(username) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+
+                let existingUser = users.find(u => u.username === username);
+                resolve(existingUser);
+                // const { errors, isValid } = validateUser(user);
+                // if (!isValid) {
+                //     reject(errors);
+                // }
+                // let existingUser = users.find(u => u.username === user.username && u.password === user.password);
+                // if (existingUser) {
+                //     resolve({ success: true });
+                // } else {
+                //     reject('User does not exist');
+                // }
             }, delay);
         })
     }

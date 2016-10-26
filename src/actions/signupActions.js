@@ -5,3 +5,9 @@ export function userSigninRequest(userData) {
         return userApi.saveUser(userData);
     }
 }
+
+export function isUserExists(username) {
+    return dispatch => {
+        return userApi.isUserExists(username);
+    }
+}
