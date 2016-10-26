@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 //import { Match, Redirect } from 'react-router';
 import validateUser from '../../common/validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
+import { userSigninRequest } from '../../actions/signupActions';
+import { addFlashMessage } from '../../actions/flashMessages';
+import { connect } from 'react-redux';
 
 class SignupForm extends Component {
 
@@ -40,8 +43,9 @@ class SignupForm extends Component {
         }
 
         this.setState({ errors: {}, isLoading: true });
-        this.props.userLoginRequest(this.state)
-            .then(() => {
+        this.props.userSigninRequest({ username: this.state.username, password: this.state.password })
+            .then((user) => {
+                //debugger;
                 this.props.addFlashMessage({
                     type: 'success',
                     text: 'You signed up successfully. Welcome!'
@@ -84,7 +88,7 @@ class SignupForm extends Component {
 }
 
 SignupForm.propTypes = {
-    userLoginRequest: PropTypes.func.isRequired,
+    userSigninRequest: PropTypes.func.isRequired,
     addFlashMessage: PropTypes.func.isRequired
 }
 
@@ -92,4 +96,4 @@ SignupForm.contextTypes = {
     router: PropTypes.object
 }
 
-export default SignupForm;
+export default connect(null, { userSigninRequest, addFlashMessage })(SignupForm);

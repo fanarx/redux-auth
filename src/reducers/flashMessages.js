@@ -1,9 +1,7 @@
-import { ADD_FLASH_MESSAGE } from '../actions/types';
+import { ADD_FLASH_MESSAGE, DELETE_FLASH_MESSAGE } from '../actions/types';
 import shortid from 'shortid';
 
-debugger;
 export default (state = [], action = {}) => {
-    debugger;
     switch(action.type) {
         case ADD_FLASH_MESSAGE:
             return [
@@ -13,7 +11,17 @@ export default (state = [], action = {}) => {
                     type: action.message.type,
                     text: action.message.text
                 }
+            ];
+        case DELETE_FLASH_MESSAGE:
+            const idx = state.findIndex(m => m.id === action.id);
+            return idx < 0 ?
+            state 
+             :
+            [
+                ...state.slice(0, idx),
+                ...state.slice(idx + 1)
             ]
+
         default: return state;
     }
 }

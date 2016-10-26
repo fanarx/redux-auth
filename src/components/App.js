@@ -8,8 +8,7 @@ import { BrowserRouter as Router, Match} from 'react-router';
 import NavigationBar from './NavigationBar';
 import Greetings from './Greetings';
 import SignupPage from './signup/SignupPage';
-
-
+import FlashMessagesList from './flash/FlashMessagesList';
 
 class App extends Component {
 
@@ -18,6 +17,7 @@ class App extends Component {
       <Router>
         <div className="container">
             <NavigationBar />
+            <FlashMessagesList />
             {/*<Greetings />*/}
           {/*<Router>
             <div>

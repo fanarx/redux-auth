@@ -1,7 +1,7 @@
 import userApi from '../api/mockUserApi';
 
-export function userLoginRequest(userData) {
+export function userSigninRequest(userData) {
     return dispatch => {
-        return userApi.logIn(userData);
+        return userApi.saveUser(userData);
     }
 }

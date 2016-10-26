@@ -1,18 +1,17 @@
 import validateUser from '../common/validations/signup';
 
+const delay = 1200;
+
 const users = [
     {
-        id: 'user-1',
         username: 'user1',
         password: 'user1'
     },
     {
-        id: 'user-2',
         username: 'user2',
         password: 'user2'
     },
     {
-        id: 'user-3',
         username: 'user3',
         password: 'user3'
     }
@@ -20,6 +19,29 @@ const users = [
 
 
 class UserApi {
+
+    static getAllUsers() {
+        return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(Object.assign([], users));
+        }, delay);
+        });
+    }
+
+    static saveUser(user) {
+        return new Promise((resolve, reject) => {
+        setTimeout(() => {
+
+            const { errors, isValid } = validateUser(user);
+            if (!isValid) {
+                reject(errors);
+            }
+            //let existingUser = users.find(u => u.username === user.username && u.password === user.password);
+            users.push(user);
+            resolve(user);
+        }, delay);
+        });
+    }
 
     static logIn(user) {
         return new Promise((resolve, reject) => {
@@ -35,7 +57,7 @@ class UserApi {
                 } else {
                     reject('User does not exist');
                 }
-            }, 1200);
+            }, delay);
         })
     }
 }
