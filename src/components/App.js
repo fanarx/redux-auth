@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Match} from 'react-router';
 import NavigationBar from './NavigationBar';
 import Greetings from './Greetings';
 import SignupPage from './signup/SignupPage';
+import LoginPage from './login/LoginPage';
 import FlashMessagesList from './flash/FlashMessagesList';
 
 class App extends Component {
@@ -36,6 +37,7 @@ class App extends Component {
           </Router>*/}
               <Match exactly pattern="/" component={Greetings} />
               <Match pattern="/signup" component={SignupPage} />
+              <Match pattern="/login" component={LoginPage} />
         </div>
       </Router>
     );

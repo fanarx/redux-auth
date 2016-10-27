@@ -1,4 +1,5 @@
 import validateUser from '../common/validations/signup';
+import validateUserLogin from '../common/validations/login';
 
 const delay = 1200;
 
@@ -60,11 +61,11 @@ class UserApi {
         });
     }
 
-    static logIn(user) {
+    static login(user) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
 
-                const { errors, isValid } = validateUser(user);
+                const { errors, isValid } = validateUserLogin(user);
                 if (!isValid) {
                     reject(errors);
                 }
