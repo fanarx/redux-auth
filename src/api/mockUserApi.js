@@ -1,5 +1,12 @@
 import validateUser from '../common/validations/signup';
 import validateUserLogin from '../common/validations/login';
+import jwt from 'jwt-simple';
+import config from '../config';
+
+function tokenForUser(user) {
+  const timestamp = new Date().getTime();
+  return jwt.encode({ sub: user.identifier, iat: timestamp }, config.secret);
+}
 
 const delay = 1200;
 
@@ -69,15 +76,36 @@ class UserApi {
                 if (!isValid) {
                     reject(errors);
                 }
-                let existingUser = users.find(u => u.username === user.username && u.password === user.password);
+                let existingUser = users.find(u => u.username === user.identifier && u.password === user.password);
+                //debugger;
                 if (existingUser) {
-                    resolve({ success: true });
+                    resolve({ token: tokenForUser(user) });
+                    //resolve({ success: true });
                 } else {
-                    reject('User does not exist');
+                    reject({ form: 'Invalid Credentials' });
                 }
             }, delay);
         })
     }
+
+    //     static auth(user) {
+    //     return new Promise((resolve, reject) => {
+    //         setTimeout(() => {
+
+    //             const { errors, isValid } = validateUserLogin(user);
+    //             if (!isValid) {
+    //                 reject(errors);
+    //             }
+    //             let existingUser = users.find(u => u.username === user.identifier && u.password === user.password);
+    //             //debugger;
+    //             if (existingUser) {
+    //                 resolve({ success: true });
+    //             } else {
+    //                 reject('User does not exist');
+    //             }
+    //         }, delay);
+    //     })
+    // }
 
     static isUserExists(username) {
         return new Promise((resolve, reject) => {
