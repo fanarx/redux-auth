@@ -44,6 +44,11 @@ function validateServerSide(user, otherValidations) {
 
 class UserApi {
 
+    static findByUsername(username) {
+        let existingUser = users.find(u => u.username === username);
+        debugger;
+    }
+
     static getAllUsers() {
         return new Promise((resolve, reject) => {
         setTimeout(() => {

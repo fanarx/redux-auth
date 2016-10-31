@@ -22,6 +22,13 @@ export function login(userData) {
     }
 }
 
+export function logout() {
+    return dispatch => {
+        localStorage.removeItem('jwtToken');
+        dispatch(setCurrentUser({}));
+    }
+}
+
 export function isUserExists(username) {
     return dispatch => {
         return userApi.isUserExists(username);

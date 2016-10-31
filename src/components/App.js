@@ -10,6 +10,7 @@ import Greetings from './Greetings';
 import SignupPage from './signup/SignupPage';
 import LoginPage from './login/LoginPage';
 import FlashMessagesList from './flash/FlashMessagesList';
+import NewEventPage from './events/NewEventPage';
 
 class App extends Component {
 
@@ -38,6 +39,7 @@ class App extends Component {
               <Match exactly pattern="/" component={Greetings} />
               <Match pattern="/signup" component={SignupPage} />
               <Match pattern="/login" component={LoginPage} />
+              <Match pattern="/new-event" component={NewEventPage} />
         </div>
       </Router>
     );

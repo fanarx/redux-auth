@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 import App from './components/App';
 import rootReducer from './rootReducer';
 import jwtDecode from 'jwt-decode';
-import { setCurrentUser } from './actions/login';
+import { setCurrentUser } from './actions/auth';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
