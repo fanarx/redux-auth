@@ -11,6 +11,7 @@ import SignupPage from './signup/SignupPage';
 import LoginPage from './login/LoginPage';
 import FlashMessagesList from './flash/FlashMessagesList';
 import NewEventPage from './events/NewEventPage';
+import requireAuth from '../utils/requireAuth';
 
 class App extends Component {
 
@@ -39,7 +40,7 @@ class App extends Component {
               <Match exactly pattern="/" component={Greetings} />
               <Match pattern="/signup" component={SignupPage} />
               <Match pattern="/login" component={LoginPage} />
-              <Match pattern="/new-event" component={NewEventPage} />
+              <Match pattern="/new-event" component={requireAuth(NewEventPage)} />
         </div>
       </Router>
     );

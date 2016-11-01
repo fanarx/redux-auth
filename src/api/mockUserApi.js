@@ -46,7 +46,8 @@ class UserApi {
 
     static findByUsername(username) {
         let existingUser = users.find(u => u.username === username);
-        debugger;
+        
+        return existingUser;
     }
 
     static getAllUsers() {
@@ -82,7 +83,6 @@ class UserApi {
                     reject(errors);
                 }
                 let existingUser = users.find(u => u.username === user.identifier && u.password === user.password);
-                //debugger;
                 if (existingUser) {
                     resolve({ token: tokenForUser(user) });
                     //resolve({ success: true });

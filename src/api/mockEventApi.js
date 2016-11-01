@@ -14,11 +14,12 @@ class EventApi {
             } else {
                 
                 let token = event.token;
+
                 try {
-
-                let decoded = jwt.decode(token, config.secret);
-                resolve({ success: true });
-
+                    let decoded = jwt.decode(token, config.secret);
+                    let currentUsername = decoded.sub;
+                    let currentUser = userApi.findByUsername(currentUsername);
+                    resolve({ user: currentUser });
                 } catch(err) {
                     //debugger;
                     reject('Invalid token');
